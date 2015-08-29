@@ -8,7 +8,9 @@
 import scrapy
 
 
-class CosmeticosCrawlerItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+class ProductPageItem(scrapy.Item):
+    # Define the fields for the product page item
+    title = scrapy.Field()
+    name = scrapy.Field()
+    url = scrapy.Field()
+
