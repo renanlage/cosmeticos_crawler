@@ -14,9 +14,8 @@ BOT_NAME = 'cosmeticos_crawler'
 SPIDER_MODULES = ['cosmeticos_crawler.spiders']
 NEWSPIDER_MODULE = 'cosmeticos_crawler.spiders'
 
-
-# Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'cosmeticos_crawler (+http://www.yourdomain.com)'
+USER_AGENT = 'Epoca Cosmeticos Crawler (+https://github.com/renanlage/cosmeticos_crawler)'
+ROBOTSTXT_OBEY = True
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS=32
