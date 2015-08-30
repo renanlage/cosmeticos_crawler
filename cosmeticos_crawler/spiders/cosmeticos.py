@@ -1,31 +1,33 @@
 # -*- coding: utf-8 -*-
-import scrapy
-
 from cosmeticos_crawler.items import ProductPageItem
+from scrapy.spiders import CrawlSpider, Rule
+from scrapy.linkextractors import LinkExtractor
 
 
-class CosmeticosSpider(scrapy.Spider):
+class CosmeticosSpider(CrawlSpider):
     name = 'cosmeticos'
     allowed_domains = ['epocacosmeticos.com.br']
     start_urls = [
         'http://www.epocacosmeticos.com.br/'
     ]
 
-    def parse(self, response):
-        # Identify a product page by end of url
-        # and call method to extract data from it
-        if response.url.endswith('/p'):
-            self.parse_item(response)
+    rules = (
+        # Extract links matching 'category.php' (but not matching 'subsection.php')
+        # and follow links from them (since no callback means follow=True by default).
+        Rule(LinkExtractor(deny=('/account', '/centralatendimento', '/giftList', '/site/', '/checkout', '/cart',
+                                 '-ate\d+', '-de\d+a\d+', 'de-\d+(,\d+)?-a-\d+', 'priceFrom', 'specificationFilter',
+                                 'outlet', 'brinde',
+                                ))),
 
-        # If it's not a product page call parse for all other links
-        for href in response.xpath('//a/@href'):
-            url = response.urljoin(href.extract())
-            yield scrapy.Request(url, callback=self.parse)
+        # Extract links matching product pages by the end of url
+        # and call method to parse item info
+        Rule(LinkExtractor(allow=('./p$', )), callback='parse_item'),
+    )
 
     def parse_item(self, response):
-            # Set item attributes with data extracted from the page
-            item = ProductPageItem()
-            item['title'] = response.xpath('//head/title/text()').extract()
-            item['name'] = response.xpath("//div[contains(concat(' ', normalize-space(@class), ' '), ' fn productName ')]/text()").extract()
-            item['url'] = response.url
-            yield item
+        # and call method to extract data from it
+        item = ProductPageItem()
+        item['title'] = response.xpath('//head/title/text()').extract()
+        item['name'] = response.xpath("//div[contains(concat(' ', normalize-space(@class), ' '), ' fn productName ')]/text()").extract()
+        item['url'] = response.url
+        yield item
