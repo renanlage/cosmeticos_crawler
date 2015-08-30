@@ -70,7 +70,7 @@ class CosmeticosSpiderComparator:
 
 
 def main():
-    comparator = CosmeticosSpiderComparator('cosmeticos_sitemap.csv', 'cosmeticos_deu_errado.csv')
+    comparator = CosmeticosSpiderComparator('cosmeticos_sitemap.csv', 'cosmeticos.csv')
     print comparator.same_n_lines()
     print comparator.same_products()
     comparator.get_different_products()
